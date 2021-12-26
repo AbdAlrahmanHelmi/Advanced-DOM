@@ -129,3 +129,46 @@ window.addEventListener(`scroll`, function () {
     nav.classList.add(`sticky`);
   } else nav.classList.remove(`sticky`);
 });
+
+const allSection = document.querySelectorAll(`.section`);
+
+const revalSection = function (entries, observer) {
+  const [entry] = entries;
+  // console.log(entry);
+
+  if (!entry.isIntersecting) return;
+
+  entry.target.classList.remove(`section--hidden`);
+  observer.unobserve(entry.target);
+};
+
+const sectionObserver = new IntersectionObserver(revalSection, {
+  root: null,
+  threshold: 0.15,
+});
+
+allSection.forEach(function (section) {
+  sectionObserver.observe(section);
+
+  section.classList.add(`section--hidden`);
+});
+const imgTargets = document.querySelectorAll(`img[data-src]`);
+
+const loading = function (entries, observer) {
+  const [entry] = entries;
+
+  if (!entry.isIntersecting) return;
+  entry.target.src = entry.target.dataset.src;
+  entry.target.addEventListener(`load`, function () {
+    entry.target.classList.remove(`lazy-img`);
+  });
+  observer.unobserve(entry.target);
+};
+
+const imgObserver = new IntersectionObserver(loading, {
+  root: null,
+  threshold: 0,
+  rootMargin: `200px`,
+});
+
+imgTargets.forEach(img => imgObserver.observe(img));
