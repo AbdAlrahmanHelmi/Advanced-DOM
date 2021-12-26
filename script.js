@@ -6,6 +6,11 @@ const btnCloseModal = document.querySelector('.btn--close-modal');
 const btnsOpenModal = document.querySelectorAll('.btn--show-modal');
 const btnScrollTo = document.querySelector('.btn--scroll-to');
 const section1 = document.querySelector('#section--1');
+const nav = document.querySelector(`.nav`);
+const tabs = document.querySelectorAll(`.operations__tab`);
+
+const tabsContainer = document.querySelector(`.operations__tab-container`);
+const tabsContent = document.querySelectorAll(`.operations__content`);
 
 const openModal = function (e) {
   e.preventDefault();
@@ -70,7 +75,6 @@ btnScrollTo.addEventListener('click', function (e) {
 
 document.querySelector(`.nav__links`).addEventListener(`click`, function (e) {
   e.preventDefault();
-  console.log(e.target);
 
   if (e.target.classList.contains(`nav__link`)) {
     const id = e.target.getAttribute(`href`);
@@ -78,3 +82,54 @@ document.querySelector(`.nav__links`).addEventListener(`click`, function (e) {
     document.querySelector(id).scrollIntoView({ behavior: `smooth` });
   }
 });
+
+// const h1 =document.querySelector(`h1`);
+
+// console.log(h1.querySelectorAll(`.highlight`));
+// console.log(h1.children);
+
+// h1.firstElementChild.style.color=`white`
+
+tabsContainer.addEventListener(`click`, function (e) {
+  const clicked = e.target.closest(`.operations__tab`);
+  console.log(clicked);
+  if (!clicked) return;
+  {
+    tabs.forEach(t => t.classList.remove(`operations__tab--active`));
+    tabsContent.forEach(t => t.classList.remove(`operations__content--active`));
+
+    clicked.classList.add(`operations__tab--active`);
+    console.log(clicked.dataset.tab);
+
+    document
+      .querySelector(`.operations__content--${clicked.dataset.tab}`)
+      .classList.add(`operations__content--active`);
+  }
+});
+
+const handleHover = function (e) {
+  if (e.target.classList.contains(`nav__link`)) {
+    const link = e.target;
+    const sibling = link.closest(`.nav`).querySelectorAll(`.nav__link`);
+    const logo = link.closest(`.nav`).querySelector(`img`);
+
+    sibling.forEach(el => {
+      if (el !== link) el.style.opacity = this;
+      logo.style.opacity = this;
+    });
+  }
+};
+
+nav.addEventListener(`mouseover`, handleHover.bind(0.5));
+
+nav.addEventListener(`mouseout`, handleHover.bind(1));
+const initialcoords = section1.getBoundingClientRect();
+window.addEventListener(`scroll` ,function () {
+
+  if (window.scrollY > initialcoords.top) {
+    nav.classList.add(`sticky`);
+  }else nav.classList.remove(`sticky`);
+  
+});
+
+console.log(section1.getBoundingClientRect());
